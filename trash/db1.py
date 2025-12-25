@@ -15,6 +15,7 @@ class InMemoryDBLevel3:
   def clean_up(self, key:str, field:str, timestamp:int) -> None:
     if timestamp >= self.store[key]["start"] + self.store[key]["ttl"]:
       del self.store[key]
+  
   def delete_at(self, key:str, field:str, timestamp:int):
     self.clean_up(key, field, timestamp)
     if not self.store[key]:
@@ -25,8 +26,9 @@ def main():
   db = InMemoryDBLevel3()
   db.set_at_with_ttl("user1", "session", "abc", start=100, ttl=10)
  
-  print(db.get_at("user1", "session", timestamp=105))
-  # print(db.get_at("user1", "session", timestamp=111))
+  print(db.get_at("user1", "session", timestamp=105))#->abc
+  print(db.get_at("user1", "session", timestamp=111)) #->None
+  print(db.delete_at("user1", "session", timestamp=112)) #->False
 
 if __name__ =="__main__":
   main()
